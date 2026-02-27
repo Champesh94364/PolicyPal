@@ -556,9 +556,7 @@ fun ClientCard(lead: LeadEntity, navController: NavController) {
 @Composable
 fun EditLeadScreen(id: Long, navController: NavController, vm: LeadViewModel) {
 
-    // Observe list from ViewModel
     val leads by vm.leads.collectAsStateWithLifecycle()
-
     val lead = leads.find { it.id == id } ?: return
 
     var name by remember(lead.id) { mutableStateOf(lead.name) }
@@ -569,19 +567,19 @@ fun EditLeadScreen(id: Long, navController: NavController, vm: LeadViewModel) {
 
     var checklist by remember(lead.id) { mutableStateOf(lead.checklist) }
     val customFields = remember(lead.id) {
-        mutableStateListOf<com.example.policypal.data.CustomField>().apply {
-            addAll(lead.customFields)
-        }
+        mutableStateListOf<com.example.policypal.data.CustomField>().apply { addAll(lead.customFields) }
     }
+
+    val labels = listOf("Contacted", "Needs Analysis", "Docs Collected", "Proposal Shared", "Deal Closed")
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(bottom = 90.dp) // ✅ allows reaching last button
     ) {
-
-        item {Text("Edit Client", style = MaterialTheme.typography.titleLarge) }
+        item { Text("Edit Client", style = MaterialTheme.typography.titleLarge) }
 
         item {
             OutlinedTextField(
@@ -591,7 +589,6 @@ fun EditLeadScreen(id: Long, navController: NavController, vm: LeadViewModel) {
                 modifier = Modifier.fillMaxWidth()
             )
         }
-
         item {
             OutlinedTextField(
                 value = phone,
@@ -600,7 +597,6 @@ fun EditLeadScreen(id: Long, navController: NavController, vm: LeadViewModel) {
                 modifier = Modifier.fillMaxWidth()
             )
         }
-
         item {
             OutlinedTextField(
                 value = age,
@@ -609,7 +605,6 @@ fun EditLeadScreen(id: Long, navController: NavController, vm: LeadViewModel) {
                 modifier = Modifier.fillMaxWidth()
             )
         }
-
         item {
             OutlinedTextField(
                 value = city,
@@ -618,7 +613,6 @@ fun EditLeadScreen(id: Long, navController: NavController, vm: LeadViewModel) {
                 modifier = Modifier.fillMaxWidth()
             )
         }
-
         item {
             OutlinedTextField(
                 value = income,
@@ -632,29 +626,20 @@ fun EditLeadScreen(id: Long, navController: NavController, vm: LeadViewModel) {
             Text("Checklist", style = MaterialTheme.typography.titleMedium)
         }
 
-        item {
-            val labels = listOf("Contacted", "Needs Analysis", "Docs Collected", "Proposal Shared", "Deal Closed")
-            labels.forEachIndexed { i, label ->
-                val checked = checklist.getOrNull(i) ?: false
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = checked,
-                        onCheckedChange = { v ->
-                            val newList = checklist.toMutableList()
-                            while (newList.size < labels.size) newList.add(false)
-                            newList[i] = v
-                            checklist = newList
-                        }
-                    )
-                    Text(label)
-                }
+        items(labels.size) { i ->
+            val checked = checklist.getOrNull(i) ?: false
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = checked,
+                    onCheckedChange = { v ->
+                        val newList = checklist.toMutableList()
+                        while (newList.size < labels.size) newList.add(false)
+                        newList[i] = v
+                        checklist = newList
+                    }
+                )
+                Text(labels[i])
             }
-        }
-
-        item {
-            Spacer(Modifier.height(12.dp))
-            Text("Custom Fields", style = MaterialTheme.typography.titleMedium)
-            CustomFieldSection(customFields)
         }
 
         item {
@@ -674,12 +659,8 @@ fun EditLeadScreen(id: Long, navController: NavController, vm: LeadViewModel) {
                     navController.popBackStack()
                 },
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Save Changes")
-            }
+            ) { Text("Save Changes") }
         }
-
-        item { Spacer(Modifier.height(30.dp)) }
     }
 }
 @Composable

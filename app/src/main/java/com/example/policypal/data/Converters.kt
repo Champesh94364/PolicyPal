@@ -8,7 +8,6 @@ class Converters {
 
     private val gson = Gson()
 
-    // ---- Custom Fields: List<CustomField> ----
     @TypeConverter
     fun customFieldsToString(value: List<CustomField>?): String {
         return gson.toJson(value ?: emptyList<CustomField>())
@@ -21,7 +20,6 @@ class Converters {
         return gson.fromJson(value, type)
     }
 
-    // ---- Checklist: List<Boolean> ----
     @TypeConverter
     fun checklistToString(value: List<Boolean>?): String {
         return gson.toJson(value ?: emptyList<Boolean>())

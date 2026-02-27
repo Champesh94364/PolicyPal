@@ -15,5 +15,5 @@ data class LeadEntity(
     val income: String,
     val status: String = "Active",
     val customFields: List<CustomField> = emptyList(),
-    val checklist: List<Boolean> = listOf(false, false, false, false, false)
+    val checklist: List<Boolean> = emptyList()
 )
