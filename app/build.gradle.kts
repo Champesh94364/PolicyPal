@@ -30,7 +30,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    // ✅ Kotlin 2.x way (replaces kotlinOptions)
+    // Kotlin 2.x compilerOptions (fixes your jvmTarget error)
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -39,13 +39,12 @@ android {
 }
 
 dependencies {
-
-    // CORE
+    // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
-    // COMPOSE
+    // Compose (BOM)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -53,45 +52,39 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.foundation)
 
-    // MATERIAL ICONS
+    // Lifecycle Compose (collectAsStateWithLifecycle)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Material icons (optional, not from catalog)
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.material:material-icons-extended")
 
-    // DEBUG
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    // ROOM
+    // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
 
-    // NAVIGATION
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-
-    // CHART
+    // MPAndroidChart + Gson
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
-    // GSON (for Room TypeConverters)
     implementation("com.google.code.gson:gson:2.11.0")
 
-    // ✅ JUnit4 (matches your test files)
-    testImplementation("junit:junit:4.13.2")
+    // Debug tooling
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    testImplementation(libs.junit.jupiter)
+    // Unit tests (JUnit4)
+    testImplementation(libs.junit)
 
-    // ✅ Android Instrumented test deps
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    // Instrumented tests
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 }
 
 kapt {
     correctErrorTypes = true
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
