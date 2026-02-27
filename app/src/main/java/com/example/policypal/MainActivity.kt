@@ -53,8 +53,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -676,7 +675,12 @@ fun NewLeadScreen(vm: LeadViewModel) {
     var city by remember { mutableStateOf("") }
     var income by remember { mutableStateOf("") }
 
-    Scaffold { padding ->
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .padding(padding)
@@ -686,6 +690,7 @@ fun NewLeadScreen(vm: LeadViewModel) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 90.dp)
         ) {
+
             item {
                 Text(
                     "New Lead",
@@ -742,9 +747,7 @@ fun NewLeadScreen(vm: LeadViewModel) {
             item { HorizontalDivider(thickness = 1.dp) }
 
             item { CustomFieldSection(customFields) }
-
             item { AIPersonaSection() }
-
             item { ChecklistSection(checkedStates) }
 
             item {
@@ -760,7 +763,26 @@ fun NewLeadScreen(vm: LeadViewModel) {
                             customFields = customFields.toList(),
                             checklist = checkedStates.toList()
                         )
+
                         vm.insert(newLead)
+
+                        // ✅ clear inputs (stay on same page)
+                        name = ""
+                        phone = ""
+                        age = ""
+                        city = ""
+                        income = ""
+                        customFields.clear()
+                        for (i in checkedStates.indices) checkedStates[i] = false
+
+                        // ✅ success message for a moment
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Lead saved successfully ✅",
+                                withDismissAction = false,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
