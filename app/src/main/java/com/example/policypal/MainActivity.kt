@@ -315,7 +315,8 @@ fun ClientsScreen(navController: NavController, vm: LeadViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(bottom = 90.dp)
     ) {
 
         // 🔍 SEARCH + FILTER UI
@@ -668,6 +669,7 @@ fun NewLeadScreen(vm: LeadViewModel) {
 
     val customFields = remember { mutableStateListOf<com.example.policypal.data.CustomField>() }
     val checkedStates = remember { mutableStateListOf(false, false, false, false, false) }
+
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
@@ -679,12 +681,11 @@ fun NewLeadScreen(vm: LeadViewModel) {
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .imePadding()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 90.dp)
         ) {
-
             item {
                 Text(
                     "New Lead",
@@ -695,40 +696,44 @@ fun NewLeadScreen(vm: LeadViewModel) {
 
             item {
                 OutlinedTextField(
-                    name,
-                    { name = it },
+                    value = name,
+                    onValueChange = { name = it },
                     label = { Text("Full Name") },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
             item {
                 OutlinedTextField(
-                    phone,
-                    { phone = it },
+                    value = phone,
+                    onValueChange = { phone = it },
                     label = { Text("Phone Number") },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
             item {
                 OutlinedTextField(
-                    age,
-                    { age = it },
+                    value = age,
+                    onValueChange = { age = it },
                     label = { Text("Age") },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
             item {
                 OutlinedTextField(
-                    city,
-                    { city = it },
+                    value = city,
+                    onValueChange = { city = it },
                     label = { Text("City") },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
             item {
                 OutlinedTextField(
-                    income,
-                    { income = it },
+                    value = income,
+                    onValueChange = { income = it },
                     label = { Text("Monthly Income") },
                     modifier = Modifier.fillMaxWidth()
                 )
