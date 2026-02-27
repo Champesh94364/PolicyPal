@@ -1,25 +1,28 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.example.policypal"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.policypal"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures { compose = true }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
+    buildFeatures {
+        compose = true
     }
 
     compileOptions {
@@ -27,7 +30,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions { jvmTarget = "11" }
+    // ✅ Kotlin 2.x way (replaces kotlinOptions)
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
 }
 
 dependencies {
@@ -43,12 +51,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.foundation)
 
     // MATERIAL ICONS
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.material:material-icons-extended")
-    implementation(libs.androidx.compose.foundation)
-    testImplementation(libs.junit.jupiter)
 
     // DEBUG
     debugImplementation(libs.androidx.compose.ui.tooling)
@@ -65,9 +72,26 @@ dependencies {
     // CHART
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+    // GSON (for Room TypeConverters)
     implementation("com.google.code.gson:gson:2.11.0")
+
+    // ✅ JUnit4 (matches your test files)
+    testImplementation("junit:junit:4.13.2")
+
+    testImplementation(libs.junit.jupiter)
+
+    // ✅ Android Instrumented test deps
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 }
 
 kapt {
     correctErrorTypes = true
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
