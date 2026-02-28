@@ -1,15 +1,11 @@
 package com.example.policypal
 
+import androidx.compose.foundation.layout.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.policypal.data.LeadEntity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.policypal.data.AppDatabase
-import com.example.policypal.data.LeadRepository
-import com.example.policypal.data.LeadViewModel
-import com.example.policypal.data.LeadViewModelFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.foundation.lazy.LazyColumn
