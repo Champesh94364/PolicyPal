@@ -5,28 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.policypal.data.dao.ProposalDao
-import com.example.policypal.data.entities.*
 
-@Database(
-    entities = [
-        ProposalEntity::class,
-        PersonEntity::class,
-        AddressEntity::class,
-        OccupationEntity::class,
-        BankDetailsEntity::class,
-        HealthEntity::class,
-        ProposalPersonLinkEntity::class,
-        ChecklistEntity::class,
-        CustomFieldEntity::class
-    ],
-    version = 1,
-    exportSchema = false
-)
+@Database(entities = [LeadEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-
-    abstract fun proposalDao(): ProposalDao
+    abstract fun leadDao(): LeadDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -36,10 +19,8 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "policypal.db"
-                )
-                    .fallbackToDestructiveMigration() // since you're replacing fully
-                    .build()
+                    "policypal_db"
+                ).build()
                 INSTANCE = instance
                 instance
             }
